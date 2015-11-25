@@ -26,28 +26,30 @@ module pie(radius, angle, height, spin=0) {
 			cube([2*(radius + 1), radius + 1, height + 2]);
 		}
 	}
-	
+
 	module rotPieCube() {
 		rotate([0, 0, halfAng]) {
 			pieCube();
 		}
 	}
-	
-	if (ang == 0) {
-		cylinder(r=radius, h=height);
-	} else {
-		rotate([0, 0, ang + spin]) {
-			intersection() {
-				cylinder(r=radius, h=height);
-				if (absAng < 180) {
-					difference() {
-						pieCube();
-						rotPieCube();
-					}
-				} else {
-					union() {
-						pieCube();
-						rotPieCube();
+
+	if (angle != 0) {
+		if (ang == 0) {
+			cylinder(r=radius, h=height);
+		} else {
+			rotate([0, 0, ang + spin]) {
+				intersection() {
+					cylinder(r=radius, h=height);
+					if (absAng < 180) {
+						difference() {
+							pieCube();
+							rotPieCube();
+						}
+					} else {
+						union() {
+							pieCube();
+							rotPieCube();
+						}
 					}
 				}
 			}
