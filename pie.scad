@@ -14,41 +14,40 @@
  * @param float spin   Angle to spin the slice on the Z axis
  */
 module pie(radius, angle, height, spin=0) {
+	// calculations
+	ang = angle % 360;
+	absAng = abs(ang);
+	halfAng = absAng % 180;
+	negAng = min(ang, 0);
+
 	// submodules
 	module pieCube() {
 		translate([-radius - 1, 0, -1]) {
-			cube([2*(radius + 1), radius, height + 2]);
+			cube([2*(radius + 1), radius + 1, height + 2]);
 		}
 	}
-
-	ang = abs(angle % 360);
 	
-	negAng = angle < 0 ? angle : 0;
+	module rotPieCube() {
+		rotate([0, 0, halfAng]) {
+			pieCube();
+		}
+	}
 	
-	rotate([0,0,negAng + spin]) {
-		if (angle == 0) {
-			cylinder(r=radius, h=height);
-		} else if (abs(angle) > 0 && ang <= 180) {
-			difference() {
-				intersection() {
-					cylinder(r=radius, h=height);
-					translate([0,0,0]) {
-						pieCube();
-					}
-				}
-				rotate([0, 0, ang]) {
-					pieCube();
-				}
-			}
-		} else if (ang > 180) {
+	if (ang == 0) {
+		cylinder(r=radius, h=height);
+	} else {
+		rotate([0, 0, ang + spin]) {
 			intersection() {
 				cylinder(r=radius, h=height);
-				union() {
-					translate([0, 0, 0]) {
+				if (absAng < 180) {
+					difference() {
 						pieCube();
+						rotPieCube();
 					}
-					rotate([0, 0, ang - 180]) {
+				} else {
+					union() {
 						pieCube();
+						rotPieCube();
 					}
 				}
 			}
@@ -56,4 +55,10 @@ module pie(radius, angle, height, spin=0) {
 	}
 }
 
-pie(radius=10, angle=-1000, height=20, spin = 0);
+/**
+ * When used as a module (statement "use <pie.scad>") the example below will not
+ * render. If you run this file alone, it will :)
+ */
+
+pie(radius=10, angle=-260, height=5, spin = 0);
+pie(radius=15, angle=25, height = 10, spin = 25);
