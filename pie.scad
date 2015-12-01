@@ -37,7 +37,7 @@ module pie(radius, angle, height, spin=0) {
 		if (ang == 0) {
 			cylinder(r=radius, h=height);
 		} else {
-			rotate([0, 0, spin]) {
+			rotate([0, 0, spin + negAng]) {
 				intersection() {
 					cylinder(r=radius, h=height);
 					if (absAng < 180) {
@@ -63,4 +63,4 @@ module pie(radius, angle, height, spin=0) {
  */
 
 pie(radius=10, angle=-260, height=5, spin = 0);
-pie(radius=15, angle=25, height = 10, spin = -30);
+pie(radius=15, angle=25, height = 10, spin = 30);
